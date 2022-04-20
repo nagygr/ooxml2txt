@@ -86,6 +86,54 @@ func (d *Docx) Text() string {
 	return text.String()
 }
 
+func (d *Docx) Links() (links []string) {
+	const (
+		tagName = "Relationship"
+		typeName = "Type"
+		targetName = "Target"
+		urlType = "http://schemas.openxmlformats.org/officeDocument/2006/relationships/hyperlink"
+	)
+
+	var (
+		contents = strings.NewReader(d.links)
+		decoder = xml.NewDecoder(contents)
+		urlFound bool
+	)
+
+	for {
+		token, err := decoder.Token()
+		urlFound = false
+
+		if err == io.EOF {
+			break
+		} else if err != nil {
+			log.Fatalf("Error while parsing xml file: %s", err.Error())
+		}
+
+		switch t := token.(type) {
+			case xml.StartElement:
+				if t.Name.Local == tagName {
+					var url string
+
+					for _, a := range t.Attr {
+						if a.Name.Local == typeName && a.Value == urlType {
+							urlFound = true
+						} else if a.Name.Local == targetName {
+							url = a.Value
+						}
+					}
+
+					if urlFound {
+						links = append(links, url)
+					}
+				}
+			default:
+		}
+	}
+
+	return
+}
+
 func readHeaderFooter(files []*zip.File) (headerText map[string]string, footerText map[string]string, err error) {
 	h, f, err := retrieveHeaderFooterDoc(files)
 

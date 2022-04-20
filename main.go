@@ -23,4 +23,6 @@ func main() {
 	}
 
 	fmt.Printf("Text: %s\n", docxfile.Text())
+
+	fmt.Printf("Links: %s\n", docxfile.Links())
 }
