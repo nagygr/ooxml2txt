@@ -1,5 +1,11 @@
 package archive
 
+/*
+ * Using code snippets from:
+ * https://github.com/nguyenthenguyen/docx/
+ * (c) Nguyen The Nguyen
+ */
+
 import (
 	"archive/zip"
 )
