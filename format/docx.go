@@ -2,10 +2,12 @@ package format
 
 import (
 	"archive/zip"
+	"encoding/xml"
 	"errors"
 	"github.com/nagygr/ooxml2txt/archive"
 	"io"
 	"io/ioutil"
+	"log"
 	"strings"
 )
 
@@ -48,7 +50,40 @@ func MakeDocx(path string) (*Docx, error) {
 }
 
 func (d *Docx) Text() string {
-	return d.content
+	var (
+		contents = strings.NewReader(d.content)
+		decoder = xml.NewDecoder(contents)
+		text strings.Builder
+		inText bool = false
+	)
+
+	for {
+		token, err := decoder.Token()
+
+		if err == io.EOF {
+			break
+		} else if err != nil {
+			log.Fatalf("Error while parsing xml file: %s", err.Error())
+		}
+
+		switch t := token.(type) {
+			case xml.CharData:
+				if inText {
+					text.WriteString(string(t))
+				}
+			case xml.StartElement:
+				if t.Name.Local == "t" {
+					inText = true
+				}
+			case xml.EndElement:
+				if t.Name.Local == "t" {
+					inText = false
+				}
+			default:
+		}
+	}
+
+	return text.String()
 }
 
 func readHeaderFooter(files []*zip.File) (headerText map[string]string, footerText map[string]string, err error) {
