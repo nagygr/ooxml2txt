@@ -140,6 +140,44 @@ func (d *Docx) Links() (links []string) {
 	return
 }
 
+func (d *Docx) Footnotes() (footnotes []string) {
+	for _, footnoteXml := range d.footers {
+		var (
+			reader = strings.NewReader(footnoteXml)
+			decoder = xml.NewDecoder(reader)
+			inText bool = false
+		)
+
+		for {
+			token, err := decoder.Token()
+
+			if err == io.EOF {
+				break
+			} else if err != nil {
+				log.Fatalf("Error while parsing xml file: %s", err.Error())
+			}
+
+			switch t := token.(type) {
+				case xml.CharData:
+					if inText {
+						footnotes = append(footnotes, string(t))
+					}
+				case xml.StartElement:
+					if t.Name.Local == "t" {
+						inText = true
+					}
+				case xml.EndElement:
+					if t.Name.Local == "t" {
+						inText = false
+					}
+				default:
+			}
+		}
+	}
+
+	return
+}
+
 func readHeaderFooter(files []*zip.File) (headerText map[string]string, footerText map[string]string, err error) {
 	h, f, err := retrieveHeaderFooterDoc(files)
 
@@ -252,7 +290,7 @@ func retrieveHeaderFooterDoc(files []*zip.File) (headers []*zip.File, footers []
 		if strings.Contains(f.Name, "header") {
 			headers = append(headers, f)
 		}
-		if strings.Contains(f.Name, "footer") {
+		if strings.Contains(f.Name, "footnotes") {
 			footers = append(footers, f)
 		}
 	}
