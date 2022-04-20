@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"github.com/nagygr/ooxml2txt/archive"
+	"github.com/nagygr/ooxml2txt/format"
 	"log"
 )
 
@@ -14,4 +15,12 @@ func main() {
 	}
 
 	fmt.Printf("Number of files: %d\n", len(zipfile.Files()))
+
+	docxfile, err := format.MakeDocx("test_data/example.docx")
+
+	if err != nil {
+		log.Fatal("Couldn't open docx file: %s", err)
+	}
+
+	fmt.Printf("Text: %s\n", docxfile.Text())
 }
