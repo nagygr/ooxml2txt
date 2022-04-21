@@ -16,6 +16,6 @@ import (
 
 func main() {
 	doc, _ := format.MakeDocx("example.docx")
-	fmt.Printf("%s\n", doc.Text())
+	fmt.Printf("%s\n", doc.Text)
 }
 ```
