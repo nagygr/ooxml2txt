@@ -13,3 +13,10 @@
 
 # Executable
 ooxml2txt
+
+# Tag files
+GPATH
+GRTAGS
+GTAGS
+cscope.out
+tags
