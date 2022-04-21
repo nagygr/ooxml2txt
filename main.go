@@ -22,12 +22,12 @@ func main() {
 		log.Fatal(fmt.Sprintf("Couldn't open docx file: %s", err))
 	}
 
-	fmt.Printf("Text: %s\n", docxfile.Text())
+	fmt.Printf("Text: %s\n", docxfile.Text)
 
-	fmt.Printf("Links: %s\n", docxfile.Links())
+	fmt.Printf("Links: %s\n", docxfile.Links)
 
-	fmt.Printf("Footnotes: %s\n", docxfile.Footnotes())
+	fmt.Printf("Footnotes: %s\n", docxfile.Footnotes)
 
-	fmt.Printf("Headers: %s\n", docxfile.Headers())
-	fmt.Printf("Footers: %s\n", docxfile.Footers())
+	fmt.Printf("Headers: %s\n", docxfile.Headers)
+	fmt.Printf("Footers: %s\n", docxfile.Footers)
 }
