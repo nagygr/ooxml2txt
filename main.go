@@ -30,4 +30,18 @@ func main() {
 
 	fmt.Printf("Headers: %s\n", docxfile.Headers)
 	fmt.Printf("Footers: %s\n", docxfile.Footers)
+
+	pptxfile, err := format.MakePptx("test_data/example.pptx")
+
+	if err != nil {
+		log.Fatal(fmt.Sprintf("Couldn't open pptx file: %s", err))
+	}
+
+	fmt.Printf("Text: %s\n", pptxfile.Text)
+
+	ppt, _ := format.MakePptx("test_data/example.pptx")
+
+	for n, slide := range ppt.Text {
+		fmt.Printf("Slide %d: %s\n", n, slide)
+	}
 }

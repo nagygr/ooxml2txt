@@ -4,7 +4,7 @@ Reader library for the OOXML formats
 
 ## Example
 
-Simple text retrieval from a `docx` file:
+Simple text retrieval from a `docx` and a `pptx` file:
 
 ```go
 package main
@@ -15,7 +15,15 @@ import (
 )
 
 func main() {
+	/* DOCX file: */
 	doc, _ := format.MakeDocx("example.docx")
 	fmt.Printf("%s\n", doc.Text)
+
+	/* PPTX file: */
+	ppt, _ := format.MakePptx("example.pptx")
+
+	for n, slide := range ppt.Text {
+		fmt.Printf("Slide %d: %s\n", n, slide)
+	}
 }
 ```

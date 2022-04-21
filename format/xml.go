@@ -210,7 +210,8 @@ func textListFromXmls(textXmls map[string]string) (textList []string, err error)
 			return
 		}
 
-		textList = append(textList, tmpList...)
+		slideText := strings.Join(tmpList, " ")
+		textList = append(textList, slideText)
 	}
 
 	return
