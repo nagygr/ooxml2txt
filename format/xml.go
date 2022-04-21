@@ -203,37 +203,14 @@ func textListFromXml(textXml string) (textList []string, err error) {
 
 func textListFromXmls(textXmls map[string]string) (textList []string, err error) {
 	for _, textXml := range textXmls {
-		var (
-			reader = strings.NewReader(textXml)
-			decoder = xml.NewDecoder(reader)
-			inText bool = false
-		)
+		tmpList, errXml := textListFromXml(textXml)
 
-		for {
-			token, decErr := decoder.Token()
-
-			if decErr == io.EOF {
-				break
-			} else if decErr != nil {
-				err = errors.New(fmt.Sprintf("Error while parsing xml file: %s", decErr.Error()))
-			}
-
-			switch t := token.(type) {
-				case xml.CharData:
-					if inText {
-						textList = append(textList, string(t))
-					}
-				case xml.StartElement:
-					if t.Name.Local == "t" {
-						inText = true
-					}
-				case xml.EndElement:
-					if t.Name.Local == "t" {
-						inText = false
-					}
-				default:
-			}
+		if errXml != nil {
+			err = errXml
+			return
 		}
+
+		textList = append(textList, tmpList...)
 	}
 
 	return
