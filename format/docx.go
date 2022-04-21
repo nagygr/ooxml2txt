@@ -21,6 +21,7 @@ type Docx struct {
 	zipReader archive.ZipData
 	content   string
 	links     string
+	footnotes string
 	headers   map[string]string
 	footers   map[string]string
 }
@@ -47,10 +48,16 @@ func MakeDocx(path string) (*Docx, error) {
 	 */
 	headers, footers, _ := readHeaderFooter(reader.Files())
 
+	/*
+	 * Error not handled: it is ok to not find footnotes
+	 */
+	footnotes, _ := readFootnotes(reader.Files())
+
 	return &Docx {
 		zipReader: reader,
 		content: content,
 		links: links,
+		footnotes: footnotes,
 		headers: headers,
 		footers: footers}, nil
 }
@@ -141,41 +148,68 @@ func (d *Docx) Links() (links []string) {
 }
 
 func (d *Docx) Footnotes() (footnotes []string) {
-	for _, footnoteXml := range d.footers {
-		var (
-			reader = strings.NewReader(footnoteXml)
-			decoder = xml.NewDecoder(reader)
-			inText bool = false
-		)
+	var (
+		reader = strings.NewReader(d.footnotes)
+		decoder = xml.NewDecoder(reader)
+		inText bool = false
+	)
 
-		for {
-			token, err := decoder.Token()
+	for {
+		token, err := decoder.Token()
 
-			if err == io.EOF {
-				break
-			} else if err != nil {
-				log.Fatalf("Error while parsing xml file: %s", err.Error())
-			}
+		if err == io.EOF {
+			break
+		} else if err != nil {
+			log.Fatalf("Error while parsing xml file: %s", err.Error())
+		}
 
-			switch t := token.(type) {
-				case xml.CharData:
-					if inText {
-						footnotes = append(footnotes, string(t))
-					}
-				case xml.StartElement:
-					if t.Name.Local == "t" {
-						inText = true
-					}
-				case xml.EndElement:
-					if t.Name.Local == "t" {
-						inText = false
-					}
-				default:
-			}
+		switch t := token.(type) {
+			case xml.CharData:
+				if inText {
+					footnotes = append(footnotes, string(t))
+				}
+			case xml.StartElement:
+				if t.Name.Local == "t" {
+					inText = true
+				}
+			case xml.EndElement:
+				if t.Name.Local == "t" {
+					inText = false
+				}
+			default:
 		}
 	}
 
 	return
+}
+
+func readFootnotes(files []*zip.File) (string, error) {
+	f, err := retrieveFootnoteDoc(files)
+
+	if err != nil {
+		return "", err
+	}
+
+	footnotes, err := buildFootnotes(f)
+	if err != nil {
+		return "", err
+	}
+
+	return footnotes, nil
+}
+
+func buildFootnotes(footnotesFile *zip.File) (string, error) {
+	documentReader, err := footnotesFile.Open()
+	if err != nil {
+		return "", err
+	}
+
+	footnotesText, err := wordDocToString(documentReader)
+	if err != nil {
+		return "", err
+	}
+
+	return footnotesText, nil
 }
 
 func readHeaderFooter(files []*zip.File) (headerText map[string]string, footerText map[string]string, err error) {
@@ -290,12 +324,25 @@ func retrieveHeaderFooterDoc(files []*zip.File) (headers []*zip.File, footers []
 		if strings.Contains(f.Name, "header") {
 			headers = append(headers, f)
 		}
-		if strings.Contains(f.Name, "footnotes") {
+		if strings.Contains(f.Name, "footer") {
 			footers = append(footers, f)
 		}
 	}
 	if len(headers) == 0 && len(footers) == 0 {
 		err = errors.New("headers[1-3].xml file not found and footers[1-3].xml file not found")
+	}
+	return
+}
+
+func retrieveFootnoteDoc(files []*zip.File) (footnotes *zip.File, err error) {
+	for _, f := range files {
+		if strings.Contains(f.Name, "footnotes") {
+			footnotes =  f
+			break
+		}
+	}
+	if footnotes == nil {
+		err = errors.New("footnotes.xml file not found")
 	}
 	return
 }
