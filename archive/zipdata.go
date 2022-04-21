@@ -1,3 +1,4 @@
+// Package archive contains types related to zip handling.
 package archive
 
 /*
@@ -10,6 +11,7 @@ import (
 	"archive/zip"
 )
 
+// ZipData defines the common interface for different zip-handling types.
 type ZipData interface {
 	Files() []*zip.File
 	close() error
