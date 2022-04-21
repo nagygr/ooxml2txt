@@ -26,5 +26,8 @@ func main() {
 
 	fmt.Printf("Links: %s\n", docxfile.Links())
 
-	fmt.Printf("Footers: %s\n", docxfile.Footnotes())
+	fmt.Printf("Footnotes: %s\n", docxfile.Footnotes())
+
+	fmt.Printf("Headers: %s\n", docxfile.Headers())
+	fmt.Printf("Footers: %s\n", docxfile.Footers())
 }

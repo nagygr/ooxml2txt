@@ -183,6 +183,82 @@ func (d *Docx) Footnotes() (footnotes []string) {
 	return
 }
 
+func (d *Docx) Headers() (headers []string) {
+	for _, headerXml := range d.headers {
+		var (
+			reader = strings.NewReader(headerXml)
+			decoder = xml.NewDecoder(reader)
+			inText bool = false
+		)
+
+		for {
+			token, err := decoder.Token()
+
+			if err == io.EOF {
+				break
+			} else if err != nil {
+				log.Fatalf("Error while parsing xml file: %s", err.Error())
+			}
+
+			switch t := token.(type) {
+				case xml.CharData:
+					if inText {
+						headers = append(headers, string(t))
+					}
+				case xml.StartElement:
+					if t.Name.Local == "t" {
+						inText = true
+					}
+				case xml.EndElement:
+					if t.Name.Local == "t" {
+						inText = false
+					}
+				default:
+			}
+		}
+	}
+
+	return
+}
+
+func (d *Docx) Footers() (footers []string) {
+	for _, footerXml := range d.footers {
+		var (
+			reader = strings.NewReader(footerXml)
+			decoder = xml.NewDecoder(reader)
+			inText bool = false
+		)
+
+		for {
+			token, err := decoder.Token()
+
+			if err == io.EOF {
+				break
+			} else if err != nil {
+				log.Fatalf("Error while parsing xml file: %s", err.Error())
+			}
+
+			switch t := token.(type) {
+				case xml.CharData:
+					if inText {
+						footers = append(footers, string(t))
+					}
+				case xml.StartElement:
+					if t.Name.Local == "t" {
+						inText = true
+					}
+				case xml.EndElement:
+					if t.Name.Local == "t" {
+						inText = false
+					}
+				default:
+			}
+		}
+	}
+
+	return
+}
+
 func readFootnotes(files []*zip.File) (string, error) {
 	f, err := retrieveFootnoteDoc(files)
 
