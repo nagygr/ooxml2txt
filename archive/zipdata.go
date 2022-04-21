@@ -13,4 +13,7 @@ import (
 type ZipData interface {
 	Files() []*zip.File
 	close() error
+
+	FileByName(name string) (file *zip.File, err error)
+	FilesByName(substring string) (files []*zip.File, err error)
 }

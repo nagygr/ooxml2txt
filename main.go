@@ -19,7 +19,7 @@ func main() {
 	docxfile, err := format.MakeDocx("test_data/example.docx")
 
 	if err != nil {
-		log.Fatal("Couldn't open docx file: %s", err)
+		log.Fatal(fmt.Sprintf("Couldn't open docx file: %s", err))
 	}
 
 	fmt.Printf("Text: %s\n", docxfile.Text())
