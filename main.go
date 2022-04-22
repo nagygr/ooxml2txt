@@ -11,7 +11,7 @@ func main() {
 	zipfile, err := archive.MakeZipFile("test_data/example.docx")
 
 	if err != nil {
-		log.Fatal("Couldn't open zip file: %s", err)
+		log.Fatalf("Couldn't open zip file: %s", err)
 	}
 
 	fmt.Printf("Number of files: %d\n", len(zipfile.Files()))
@@ -19,7 +19,7 @@ func main() {
 	docxfile, err := format.MakeDocx("test_data/example.docx")
 
 	if err != nil {
-		log.Fatal(fmt.Sprintf("Couldn't open docx file: %s", err))
+		log.Fatalf(fmt.Sprintf("Couldn't open docx file: %s", err))
 	}
 
 	fmt.Printf("Text: %s\n", docxfile.Text)
@@ -34,7 +34,7 @@ func main() {
 	pptxfile, err := format.MakePptx("test_data/example.pptx")
 
 	if err != nil {
-		log.Fatal(fmt.Sprintf("Couldn't open pptx file: %s", err))
+		log.Fatalf(fmt.Sprintf("Couldn't open pptx file: %s", err))
 	}
 
 	fmt.Printf("Text: %s\n", pptxfile.Text)
