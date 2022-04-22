@@ -216,3 +216,49 @@ func textListFromXmls(textXmls map[string]string) (textList []string, err error)
 
 	return
 }
+
+func xlsxSharedStringsFromXml(sharedStringsXml string) (sharedStrings []string, err error) {
+	var (
+		reader = strings.NewReader(sharedStringsXml)
+		decoder = xml.NewDecoder(reader)
+		inSi bool = false
+		inT bool = false
+		currentString strings.Builder
+	)
+
+	for {
+		token, decErr := decoder.Token()
+
+		if decErr == io.EOF {
+			break
+		} else if decErr != nil {
+			err = errors.New(fmt.Sprintf("Error while parsing xml file: %s", decErr.Error()))
+		}
+
+		switch t := token.(type) {
+			case xml.CharData:
+				if inT {
+					currentString.WriteString(string(t))
+				}
+			case xml.StartElement:
+				if t.Name.Local == "si" {
+					inSi = true
+				} else if t.Name.Local == "t" && inSi {
+					inT = true
+				}
+
+			case xml.EndElement:
+				if t.Name.Local == "si" {
+					inSi = false
+					sharedStrings = append(sharedStrings, currentString.String())
+					currentString.Reset()
+				} else if t.Name.Local == "t" {
+					inT = false
+				}
+			default:
+		}
+	}
+
+	return
+}
+

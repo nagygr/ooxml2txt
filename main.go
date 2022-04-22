@@ -44,4 +44,10 @@ func main() {
 	for n, slide := range ppt.Text {
 		fmt.Printf("Slide %d: %s\n", n, slide)
 	}
+
+	xls, _ := format.MakeXlsx("test_data/example.xlsx")
+
+	for _, str := range xls.Text {
+		fmt.Printf("%s\n", str)
+	}
 }
