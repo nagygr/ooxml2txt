@@ -1,7 +1,6 @@
 package format
 
 import (
-	_ "fmt"
 	"strings"
 	"testing"
 )
