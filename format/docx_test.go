@@ -77,3 +77,13 @@ func TestReadingDocxText(t *testing.T) {
 		}
 	}
 }
+
+func TestMissingDocumentXml(t *testing.T) {
+	path := "../test_data/broken_missing_document_xml.docx"
+	_, err := MakeDocx(path)
+
+	t.Logf("%s", err.Error())
+	if err == nil {
+		t.Errorf("Expected to get an error due to the missing document.xml.")
+	}
+}
