@@ -6,7 +6,7 @@ import (
 )
 
 func TestMakingDocxGoodPath(t *testing.T) {
-	path := "../test_data/example.docx"
+	path := "../../test_data/example.docx"
 	_, err := MakeDocx(path)
 
 	if err != nil {
@@ -15,7 +15,7 @@ func TestMakingDocxGoodPath(t *testing.T) {
 }
 
 func TestMakingDocxBadPath(t *testing.T) {
-	path := "../test_data/wrong_example.docx"
+	path := "../../test_data/wrong_example.docx"
 	_, err := MakeDocx(path)
 
 	if err == nil {
@@ -24,7 +24,7 @@ func TestMakingDocxBadPath(t *testing.T) {
 }
 
 func TestReadingDocxText(t *testing.T) {
-	path := "../test_data/example.docx"
+	path := "../../test_data/example.docx"
 	doc, err := MakeDocx(path)
 
 	if err != nil {
@@ -79,7 +79,7 @@ func TestReadingDocxText(t *testing.T) {
 }
 
 func TestMissingDocumentXml(t *testing.T) {
-	path := "../test_data/broken_missing_document_xml.docx"
+	path := "../../test_data/broken_missing_document_xml.docx"
 	_, err := MakeDocx(path)
 
 	t.Logf("%s", err.Error())

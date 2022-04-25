@@ -1,7 +1,8 @@
 package format
 
 import (
-	"github.com/nagygr/ooxml2txt/archive"
+	"github.com/nagygr/ooxml2txt/internal/archive"
+	. "github.com/nagygr/ooxml2txt/internal/format"
 )
 
 // Xlsx handles xlsx documents. The Text member is a list of strings where each
@@ -25,7 +26,7 @@ func MakeXlsx(path string) (*Xlsx, error) {
 		return nil, err
 	}
 
-	sharedStringsXml, err := readXml(reader, "xl/sharedStrings.xml")
+	sharedStringsXml, err := ReadXml(reader, "xl/sharedStrings.xml")
 
 	if err != nil {
 		return nil, err
@@ -33,7 +34,7 @@ func MakeXlsx(path string) (*Xlsx, error) {
 
 	var sharedStrings []string
 
-	sharedStrings, err = xlsxSharedStringsFromXml(sharedStringsXml)
+	sharedStrings, err = XlsxSharedStringsFromXml(sharedStringsXml)
 
 	if err != nil {
 		return nil, err

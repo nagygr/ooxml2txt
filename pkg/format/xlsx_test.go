@@ -6,7 +6,7 @@ import (
 )
 
 func TestMakingXlsxGoodPath(t *testing.T) {
-	path := "../test_data/example.xlsx"
+	path := "../../test_data/example.xlsx"
 	_, err := MakeXlsx(path)
 
 	if err != nil {
@@ -15,7 +15,7 @@ func TestMakingXlsxGoodPath(t *testing.T) {
 }
 
 func TestMakingXlsxBadPath(t *testing.T) {
-	path := "../test_data/wrong_example.xlsx"
+	path := "../../test_data/wrong_example.xlsx"
 	_, err := MakeXlsx(path)
 
 	if err == nil {
@@ -24,7 +24,7 @@ func TestMakingXlsxBadPath(t *testing.T) {
 }
 
 func TestReadingXlsxText(t *testing.T) {
-	path := "../test_data/example.xlsx"
+	path := "../../test_data/example.xlsx"
 	xls, err := MakeXlsx(path)
 
 	if err != nil {

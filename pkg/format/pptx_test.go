@@ -6,7 +6,7 @@ import (
 )
 
 func TestMakingPptxGoodPath(t *testing.T) {
-	path := "../test_data/example.pptx"
+	path := "../../test_data/example.pptx"
 	_, err := MakePptx(path)
 
 	if err != nil {
@@ -15,7 +15,7 @@ func TestMakingPptxGoodPath(t *testing.T) {
 }
 
 func TestMakingPptxBadPath(t *testing.T) {
-	path := "../test_data/wrong_example.pptx"
+	path := "../../test_data/wrong_example.pptx"
 	_, err := MakePptx(path)
 
 	if err == nil {
@@ -24,7 +24,7 @@ func TestMakingPptxBadPath(t *testing.T) {
 }
 
 func TestReadingPptxText(t *testing.T) {
-	path := "../test_data/example.pptx"
+	path := "../../test_data/example.pptx"
 	ppt, err := MakePptx(path)
 
 	if err != nil {
@@ -37,11 +37,11 @@ func TestReadingPptxText(t *testing.T) {
 
 	text := "Aalborg"
 	if !strings.HasPrefix(ppt.Text[0], text) {
-		t.Errorf("Expected the text to start with: \"%s\"", text)
+		t.Errorf("Expected the text to start with: \"%s\" (%s)", text, ppt.Text[0])
 	}
 
 	text = "Limfjordsbroen"
 	if !strings.HasSuffix(strings.TrimSpace(ppt.Text[1]), text) {
-		t.Errorf("Expected the text to end with: \"%s\"", text)
+		t.Errorf("Expected the text to end with: \"%s\" (%s)", text, ppt.Text[1])
 	}
 }

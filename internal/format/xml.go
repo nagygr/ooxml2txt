@@ -11,48 +11,48 @@ import (
 	"encoding/xml"
 	"errors"
 	"fmt"
-	"github.com/nagygr/ooxml2txt/archive"
+	"github.com/nagygr/ooxml2txt/internal/archive"
 	"io"
 	"io/ioutil"
 	"strings"
 )
 
-func readXmls(zipReader archive.ZipData, nameFragment string) (xmlTexts map[string]string, err error) {
+func ReadXmls(zipReader archive.ZipData, nameFragment string) (xmlTexts []string, err error) {
 	xmlFiles, err := zipReader.FilesByName(nameFragment);
 
 	if err != nil {
-		return map[string]string{}, err
+		return []string{}, err
 	}
 
-	xmlTexts, err = readTextFromXmls(xmlFiles)
+	xmlTexts, err = ReadTextFromXmls(xmlFiles)
 	if err != nil {
-		return map[string]string{}, err
+		return []string{}, err
 	}
 
 	return
 }
 
-func readTextFromXmls(xmlFiles []*zip.File) (map[string]string, error) {
-	xmlText := make(map[string]string)
+func ReadTextFromXmls(xmlFiles []*zip.File) ([]string, error) {
+	xmlText := []string{}
 
 	for _, element := range xmlFiles {
 		documentReader, err := element.Open()
 		if err != nil {
-			return map[string]string{}, err
+			return []string{}, err
 		}
 
-		text, err := xmlFileToString(documentReader)
+		text, err := XmlFileToString(documentReader)
 		if err != nil {
-			return map[string]string{}, err
+			return []string{}, err
 		}
 
-		xmlText[element.Name] = text
+		xmlText = append(xmlText, text)
 	}
 
 	return xmlText, nil
 }
 
-func readXml(zipReader archive.ZipData, path string) (text string, err error) {
+func ReadXml(zipReader archive.ZipData, path string) (text string, err error) {
 	var documentFile *zip.File
 	documentFile, err = zipReader.FileByName(path)
 	if err != nil {
@@ -65,12 +65,12 @@ func readXml(zipReader archive.ZipData, path string) (text string, err error) {
 		return text, err
 	}
 
-	text, err = xmlFileToString(documentReader)
+	text, err = XmlFileToString(documentReader)
 	return
 }
 
 
-func xmlFileToString(reader io.Reader) (string, error) {
+func XmlFileToString(reader io.Reader) (string, error) {
 	b, err := ioutil.ReadAll(reader)
 	if err != nil {
 		return "", err
@@ -78,7 +78,7 @@ func xmlFileToString(reader io.Reader) (string, error) {
 	return string(b), nil
 }
 
-func textFromXml(xmlText string) (string, error) {
+func TextFromXml(xmlText string) (string, error) {
 	var (
 		contents = strings.NewReader(xmlText)
 		decoder = xml.NewDecoder(contents)
@@ -116,7 +116,7 @@ func textFromXml(xmlText string) (string, error) {
 	return text.String(), nil
 }
 
-func linksFromXml(xmlLinks string) (links []string, err error) {
+func LinksFromXml(xmlLinks string) (links []string, err error) {
 	const (
 		tagName = "Relationship"
 		typeName = "Type"
@@ -165,7 +165,7 @@ func linksFromXml(xmlLinks string) (links []string, err error) {
 	return
 }
 
-func textListFromXml(textXml string) (textList []string, err error) {
+func TextListFromXml(textXml string) (textList []string, err error) {
 	var (
 		reader = strings.NewReader(textXml)
 		decoder = xml.NewDecoder(reader)
@@ -201,9 +201,9 @@ func textListFromXml(textXml string) (textList []string, err error) {
 	return
 }
 
-func textListFromXmls(textXmls map[string]string) (textList []string, err error) {
+func TextListFromXmls(textXmls []string) (textList []string, err error) {
 	for _, textXml := range textXmls {
-		tmpList, errXml := textListFromXml(textXml)
+		tmpList, errXml := TextListFromXml(textXml)
 
 		if errXml != nil {
 			err = errXml
@@ -217,7 +217,7 @@ func textListFromXmls(textXmls map[string]string) (textList []string, err error)
 	return
 }
 
-func xlsxSharedStringsFromXml(sharedStringsXml string) (sharedStrings []string, err error) {
+func XlsxSharedStringsFromXml(sharedStringsXml string) (sharedStrings []string, err error) {
 	var (
 		reader = strings.NewReader(sharedStringsXml)
 		decoder = xml.NewDecoder(reader)

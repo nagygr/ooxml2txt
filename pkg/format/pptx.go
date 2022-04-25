@@ -1,7 +1,8 @@
 package format
 
 import (
-	"github.com/nagygr/ooxml2txt/archive"
+	"github.com/nagygr/ooxml2txt/internal/archive"
+	. "github.com/nagygr/ooxml2txt/internal/format"
 )
 
 // Pptx handles pptx documents. The Text member is a list of strings where each
@@ -22,11 +23,11 @@ func MakePptx(path string) (*Pptx, error) {
 		return nil, err
 	}
 
-	slideXmls, err := readXmls(reader, "ppt/slides/slide")
+	slideXmls, err := ReadXmls(reader, "ppt/slides/slide")
 	var slideTexts []string
 
 	if err == nil {
-		slideTexts, err = textListFromXmls(slideXmls)
+		slideTexts, err = TextListFromXmls(slideXmls)
 	}
 
 	if err != nil {
