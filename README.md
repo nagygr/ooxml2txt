@@ -13,7 +13,7 @@ package main
 
 import (
 	"fmt"
-	"github.com/nagygr/ooxml2txt/pkg/format"
+	"github.com/nagygr/ooxml2txt/format"
 )
 
 func main() {
@@ -100,4 +100,13 @@ only strings containing text are returned (no numbers, dates, etc.) and each
 text fragment is only returned once no matter how many times it appears in the
 document.
 
-The `Xlsx` struct has on 
+The `Xlsx` struct has one public member:
+
+```go
+type Xlsx struct {
+	Text      []string
+	// ...
+}
+```
+
+The `Text` slice contains the unique strings from the given document.
