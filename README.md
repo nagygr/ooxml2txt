@@ -13,7 +13,7 @@ package main
 
 import (
 	"fmt"
-	"github.com/nagygr/ooxml2txt/format"
+	"github.com/nagygr/ooxml2txt/pkg/format"
 )
 
 func main() {
@@ -53,9 +53,6 @@ If something goes wrong (the given document path doesn't exist, the document's
 structure doesn't conform to the format recognized by the library, etc.) then
 an `error` is returned. Although errors are not handled in the examples above,
 they should always be handled in real life applications.
-
-The public types and functions are documented and can be browsed with the
-`godoc` tool.
 
 ### Docx
 
@@ -103,13 +100,4 @@ only strings containing text are returned (no numbers, dates, etc.) and each
 text fragment is only returned once no matter how many times it appears in the
 document.
 
-The `Xlsx` struct has one public member:
-
-```go
-type Xlsx struct {
-	Text      []string
-	// ...
-}
-```
-
-The `Text` slice contains the unique strings from the given document.
+The `Xlsx` struct has on 
