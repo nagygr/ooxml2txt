@@ -18,7 +18,7 @@ import (
 )
 
 func ReadXmls(zipReader archive.ZipData, nameFragment string) (xmlTexts []string, err error) {
-	xmlFiles, err := zipReader.FilesByName(nameFragment);
+	xmlFiles, err := zipReader.FilesByName(nameFragment)
 
 	if err != nil {
 		return []string{}, err
@@ -69,7 +69,6 @@ func ReadXml(zipReader archive.ZipData, path string) (text string, err error) {
 	return
 }
 
-
 func XmlFileToString(reader io.Reader) (string, error) {
 	b, err := ioutil.ReadAll(reader)
 	if err != nil {
@@ -81,9 +80,9 @@ func XmlFileToString(reader io.Reader) (string, error) {
 func TextFromXml(xmlText string) (string, error) {
 	var (
 		contents = strings.NewReader(xmlText)
-		decoder = xml.NewDecoder(contents)
-		text strings.Builder
-		inText bool = false
+		decoder  = xml.NewDecoder(contents)
+		text     strings.Builder
+		inText   bool = false
 	)
 
 	for {
@@ -97,19 +96,19 @@ func TextFromXml(xmlText string) (string, error) {
 		}
 
 		switch t := token.(type) {
-			case xml.CharData:
-				if inText {
-					text.WriteString(string(t))
-				}
-			case xml.StartElement:
-				if t.Name.Local == "t" {
-					inText = true
-				}
-			case xml.EndElement:
-				if t.Name.Local == "t" {
-					inText = false
-				}
-			default:
+		case xml.CharData:
+			if inText {
+				text.WriteString(string(t))
+			}
+		case xml.StartElement:
+			if t.Name.Local == "t" {
+				inText = true
+			}
+		case xml.EndElement:
+			if t.Name.Local == "t" {
+				inText = false
+			}
+		default:
 		}
 	}
 
@@ -118,15 +117,15 @@ func TextFromXml(xmlText string) (string, error) {
 
 func LinksFromXml(xmlLinks string) (links []string, err error) {
 	const (
-		tagName = "Relationship"
-		typeName = "Type"
+		tagName    = "Relationship"
+		typeName   = "Type"
 		targetName = "Target"
-		urlType = "http://schemas.openxmlformats.org/officeDocument/2006/relationships/hyperlink"
+		urlType    = "http://schemas.openxmlformats.org/officeDocument/2006/relationships/hyperlink"
 	)
 
 	var (
 		contents = strings.NewReader(xmlLinks)
-		decoder = xml.NewDecoder(contents)
+		decoder  = xml.NewDecoder(contents)
 		urlFound bool
 	)
 
@@ -142,23 +141,23 @@ func LinksFromXml(xmlLinks string) (links []string, err error) {
 		}
 
 		switch t := token.(type) {
-			case xml.StartElement:
-				if t.Name.Local == tagName {
-					var url string
+		case xml.StartElement:
+			if t.Name.Local == tagName {
+				var url string
 
-					for _, a := range t.Attr {
-						if a.Name.Local == typeName && a.Value == urlType {
-							urlFound = true
-						} else if a.Name.Local == targetName {
-							url = a.Value
-						}
-					}
-
-					if urlFound {
-						links = append(links, url)
+				for _, a := range t.Attr {
+					if a.Name.Local == typeName && a.Value == urlType {
+						urlFound = true
+					} else if a.Name.Local == targetName {
+						url = a.Value
 					}
 				}
-			default:
+
+				if urlFound {
+					links = append(links, url)
+				}
+			}
+		default:
 		}
 	}
 
@@ -167,9 +166,9 @@ func LinksFromXml(xmlLinks string) (links []string, err error) {
 
 func TextListFromXml(textXml string) (textList []string, err error) {
 	var (
-		reader = strings.NewReader(textXml)
-		decoder = xml.NewDecoder(reader)
-		inText bool = false
+		reader       = strings.NewReader(textXml)
+		decoder      = xml.NewDecoder(reader)
+		inText  bool = false
 	)
 
 	for {
@@ -182,19 +181,19 @@ func TextListFromXml(textXml string) (textList []string, err error) {
 		}
 
 		switch t := token.(type) {
-			case xml.CharData:
-				if inText {
-					textList = append(textList, string(t))
-				}
-			case xml.StartElement:
-				if t.Name.Local == "t" {
-					inText = true
-				}
-			case xml.EndElement:
-				if t.Name.Local == "t" {
-					inText = false
-				}
-			default:
+		case xml.CharData:
+			if inText {
+				textList = append(textList, string(t))
+			}
+		case xml.StartElement:
+			if t.Name.Local == "t" {
+				inText = true
+			}
+		case xml.EndElement:
+			if t.Name.Local == "t" {
+				inText = false
+			}
+		default:
 		}
 	}
 
@@ -219,10 +218,10 @@ func TextListFromXmls(textXmls []string) (textList []string, err error) {
 
 func XlsxSharedStringsFromXml(sharedStringsXml string) (sharedStrings []string, err error) {
 	var (
-		reader = strings.NewReader(sharedStringsXml)
-		decoder = xml.NewDecoder(reader)
-		inSi bool = false
-		inT bool = false
+		reader             = strings.NewReader(sharedStringsXml)
+		decoder            = xml.NewDecoder(reader)
+		inSi          bool = false
+		inT           bool = false
 		currentString strings.Builder
 	)
 
@@ -236,29 +235,28 @@ func XlsxSharedStringsFromXml(sharedStringsXml string) (sharedStrings []string, 
 		}
 
 		switch t := token.(type) {
-			case xml.CharData:
-				if inT {
-					currentString.WriteString(string(t))
-				}
-			case xml.StartElement:
-				if t.Name.Local == "si" {
-					inSi = true
-				} else if t.Name.Local == "t" && inSi {
-					inT = true
-				}
+		case xml.CharData:
+			if inT {
+				currentString.WriteString(string(t))
+			}
+		case xml.StartElement:
+			if t.Name.Local == "si" {
+				inSi = true
+			} else if t.Name.Local == "t" && inSi {
+				inT = true
+			}
 
-			case xml.EndElement:
-				if t.Name.Local == "si" {
-					inSi = false
-					sharedStrings = append(sharedStrings, currentString.String())
-					currentString.Reset()
-				} else if t.Name.Local == "t" {
-					inT = false
-				}
-			default:
+		case xml.EndElement:
+			if t.Name.Local == "si" {
+				inSi = false
+				sharedStrings = append(sharedStrings, currentString.String())
+				currentString.Reset()
+			} else if t.Name.Local == "t" {
+				inT = false
+			}
+		default:
 		}
 	}
 
 	return
 }
-

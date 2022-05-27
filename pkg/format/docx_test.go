@@ -41,7 +41,7 @@ func TestReadingDocxText(t *testing.T) {
 		t.Errorf("Expected the text to end with: \"%s\"", text)
 	}
 
-	if len(doc.Links) != 7 { 
+	if len(doc.Links) != 7 {
 		t.Errorf("Expected to have 7 links, has: %d", len(doc.Links))
 	} else {
 		linkFragment := "Denmark_Region"

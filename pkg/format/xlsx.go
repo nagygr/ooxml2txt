@@ -42,6 +42,6 @@ func MakeXlsx(path string) (*Xlsx, error) {
 
 	return &Xlsx{
 		zipReader: reader,
-		Text: sharedStrings}, nil
+		Text:      sharedStrings}, nil
 
 }

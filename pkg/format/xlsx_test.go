@@ -44,4 +44,3 @@ func TestReadingXlsxText(t *testing.T) {
 		t.Errorf("Expected the text to end with: \"%s\"", text)
 	}
 }
-

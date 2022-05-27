@@ -93,11 +93,11 @@ func MakeDocx(path string) (*Docx, error) {
 		footnotes = []string{}
 	}
 
-	return &Docx {
+	return &Docx{
 		zipReader: reader,
-		Text: text,
-		Links: links,
+		Text:      text,
+		Links:     links,
 		Footnotes: footnotes,
-		Headers: headers,
-		Footers: footers}, nil
+		Headers:   headers,
+		Footers:   footers}, nil
 }

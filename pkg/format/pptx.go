@@ -36,6 +36,6 @@ func MakePptx(path string) (*Pptx, error) {
 
 	return &Pptx{
 		zipReader: reader,
-		Text: slideTexts}, nil
+		Text:      slideTexts}, nil
 
 }
