@@ -40,6 +40,24 @@ func MakeDocx(path string) (*Docx, error) {
 		return nil, err
 	}
 
+	return makeDocxFromReader(reader)
+}
+
+// MakeDocx creates a Docx that parses the document given by an URL. The
+// returned instance contains the valid contents of the document if there was
+// no error while processing it. If there was an error, it is reported in the
+// returned error value).
+func MakeDocxFromUrl(url string) (*Docx, error) {
+	reader, err := archive.MakeZipFileFromUrl(url)
+
+	if err != nil {
+		return nil, err
+	}
+
+	return makeDocxFromReader(reader)
+}
+
+func makeDocxFromReader(reader archive.ZipData) (*Docx, error) {
 	textXml, err := ReadXml(reader, "word/document.xml")
 	if err != nil {
 		return nil, err
@@ -93,11 +111,11 @@ func MakeDocx(path string) (*Docx, error) {
 		footnotes = []string{}
 	}
 
-	return &Docx {
+	return &Docx{
 		zipReader: reader,
-		Text: text,
-		Links: links,
+		Text:      text,
+		Links:     links,
 		Footnotes: footnotes,
-		Headers: headers,
-		Footers: footers}, nil
+		Headers:   headers,
+		Footers:   footers}, nil
 }
