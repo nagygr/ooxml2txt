@@ -36,7 +36,9 @@ func main() {
 	}
 
 	/* DOCX file from URL: */
-	docUrl, _ := format.MakeDocxFromUrl("https://github.com/nagygr/ooxml2txt/raw/main/test_data/example.docx")
+	docUrl, _ := format.MakeDocxFromUrl(
+		"https://github.com/nagygr/ooxml2txt/raw/main/test_data/example.docx",
+	)
 
 	for _, str := range docUrl.Text {
 		fmt.Printf("%s\n", str)
@@ -64,7 +66,7 @@ they should always be handled in real life applications.
 Each format handler can be instantiated for a local file and also for a URL. In
 the latter case, the document is loaded directly into memory without the need
 to save it to the filesystem first. The functions creating the format handler
-from a URL and with *FromUrl*.
+from a URL end with *"FromUrl"*.
 
 ### Docx
 
