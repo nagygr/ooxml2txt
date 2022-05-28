@@ -26,6 +26,24 @@ func MakeXlsx(path string) (*Xlsx, error) {
 		return nil, err
 	}
 
+	return makeXlsxFromReader(reader)
+}
+
+// MakeXlsx creates a Xlsx from an URL to a spreadsheet document. The
+// returned instance contains the valid contents of the document if there was
+// no error while processing it (which is then reported in the returned error
+// value).
+func MakeXlsxFromUrl(url string) (*Xlsx, error) {
+	reader, err := archive.MakeZipFileFromUrl(url)
+
+	if err != nil {
+		return nil, err
+	}
+
+	return makeXlsxFromReader(reader)
+}
+
+func makeXlsxFromReader(reader archive.ZipData) (*Xlsx, error) {
 	sharedStringsXml, err := ReadXml(reader, "xl/sharedStrings.xml")
 
 	if err != nil {
