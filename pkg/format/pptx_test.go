@@ -68,3 +68,12 @@ func TestReadingPptxTextFromUrl(t *testing.T) {
 		t.Errorf("Expected the text to end with: \"%s\" (%s)", text, ppt.Text[1])
 	}
 }
+
+func TestMakingPptxBadUrl(t *testing.T) {
+	url := "http://nonexistent/notanexample.pptx"
+	_, err := MakePptxFromUrl(url)
+
+	if err == nil {
+		t.Errorf("Expected to fail to open %s successfully", url)
+	}
+}

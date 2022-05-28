@@ -29,7 +29,7 @@ func MakeXlsx(path string) (*Xlsx, error) {
 	return makeXlsxFromReader(reader)
 }
 
-// MakeXlsx creates a Xlsx from an URL to a spreadsheet document. The
+// MakeXlsxFromUrl creates a Xlsx from an URL to a spreadsheet document. The
 // returned instance contains the valid contents of the document if there was
 // no error while processing it (which is then reported in the returned error
 // value).

@@ -66,3 +66,12 @@ func TestReadingXlsxTextFromUrl(t *testing.T) {
 		t.Errorf("Expected the text to end with: \"%s\"", text)
 	}
 }
+
+func TestMakingXlsxBadUrl(t *testing.T) {
+	url := "http://nonexistent/notanexample.xlsx"
+	_, err := MakeXlsxFromUrl(url)
+
+	if err == nil {
+		t.Errorf("Expected to fail to open %s successfully", url)
+	}
+}

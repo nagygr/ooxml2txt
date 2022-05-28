@@ -34,6 +34,13 @@ func main() {
 	for _, str := range xls.Text {
 		fmt.Printf("%s\n", str)
 	}
+
+	/* DOCX file from URL: */
+	docUrl, _ := format.MakeDocxFromUrl("https://github.com/nagygr/ooxml2txt/raw/main/test_data/example.docx")
+
+	for _, str := range docUrl.Text {
+		fmt.Printf("%s\n", str)
+	}
 }
 ```
 
@@ -53,6 +60,11 @@ If something goes wrong (the given document path doesn't exist, the document's
 structure doesn't conform to the format recognized by the library, etc.) then
 an `error` is returned. Although errors are not handled in the examples above,
 they should always be handled in real life applications.
+
+Each format handler can be instantiated for a local file and also for a URL. In
+the latter case, the document is loaded directly into memory without the need
+to save it to the filesystem first. The functions creating the format handler
+from a URL and with *FromUrl*.
 
 ### Docx
 

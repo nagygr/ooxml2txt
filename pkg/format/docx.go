@@ -43,7 +43,7 @@ func MakeDocx(path string) (*Docx, error) {
 	return makeDocxFromReader(reader)
 }
 
-// MakeDocx creates a Docx that parses the document given by an URL. The
+// MakeDocxFromUrl creates a Docx that parses the document given by an URL. The
 // returned instance contains the valid contents of the document if there was
 // no error while processing it. If there was an error, it is reported in the
 // returned error value).

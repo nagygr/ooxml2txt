@@ -142,3 +142,12 @@ func TestReadingDocxTextFromUrl(t *testing.T) {
 		}
 	}
 }
+
+func TestMakingDocxBadUrl(t *testing.T) {
+	url := "http://nonexistent/notanexample.docx"
+	_, err := MakeDocxFromUrl(url)
+
+	if err == nil {
+		t.Errorf("Expected to fail to open %s successfully", url)
+	}
+}
